@@ -1,9 +1,8 @@
 [workspace]
 members = [
     "contracts/trading",
-    "contracts/academy",
     "contracts/social_rewards",
-    "contracts/messaging",
+    "contracts/academy",
     "shared",
 ]
 resolver = "2"
