@@ -5,6 +5,10 @@ members = [
     "contracts/social_rewards",
     "contracts/academy",
     "contracts/academy-rewards",
+    "contracts/staking",
+    "contracts/yield_farming",
+    "contracts/reward_distributor",
+    "contracts/governance_token",
     "shared",
 ]
 resolver = "2"
