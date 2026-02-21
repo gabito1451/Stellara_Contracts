@@ -39,6 +39,7 @@ import { Tenant } from './tenancy/entities/tenant.entity';
 import { TenantConfig } from './tenancy/entities/tenant-config.entity';
 import { TenantUsage } from './tenancy/entities/tenant-usage.entity';
 import { TenantInvitation } from './tenancy/entities/tenant-invitation.entity';
+import { ReputationModule } from './reputation/reputation.module';
 import { ApiVersioningModule } from './api-versioning/api-versioning.module';
 import { VersionMiddleware } from './api-versioning/version.middleware';
 
@@ -105,6 +106,7 @@ import { VersionMiddleware } from './api-versioning/version.middleware';
     GdprModule,
     ThrottleModule,
     TenantModule,
+    ReputationModule,
     ApiVersioningModule,
   ],
 
