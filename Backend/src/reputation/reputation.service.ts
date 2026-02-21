@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import { ReputationLog } from './entities/reputation-log.entity';
+import { Repository } from 'typeorm';
 import {
   levelFromXp,
   rankFromReputation,
@@ -44,28 +45,5 @@ export class ReputationService {
     });
 
     return user;
-  }
-  async evaluateAchievements(user: User) {
-    const achievements = await this.achievementRepo.find();
-
-    for (const achievement of achievements) {
-      const alreadyUnlocked = await this.userAchievementRepo.findOne({
-        where: {
-          user: { id: user.id },
-          achievement: { id: achievement.id },
-        },
-      });
-
-      if (alreadyUnlocked) continue;
-
-      const value = await this.resolveCondition(user, achievement.conditionKey);
-
-      if (value >= achievement.threshold) {
-        await this.userAchievementRepo.save({
-          user,
-          achievement,
-        });
-      }
-    }
   }
 }
