@@ -297,16 +297,24 @@ enum TenantPlan {
   ENTERPRISE
 }
 
+enum ApiOveragePolicy {
+  HARD_STOP
+  BILL_OVERAGE
+}
+
 model TenantSettings {
-  id                   String   @id @default(cuid())
-  tenantId             String   @unique @map("tenant_id")
-  tenant               Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  maxUsers             Int      @default(10) @map("max_users")
-  maxProjects          Int      @default(5) @map("max_projects")
-  allowPublicProjects  Boolean  @default(true) @map("allow_public_projects")
-  notificationsEnabled Boolean  @default(true) @map("notifications_enabled")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
+  id                    String           @id @default(cuid())
+  tenantId              String           @unique @map("tenant_id")
+  tenant                Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  maxUsers              Int              @default(10) @map("max_users")
+  maxProjects           Int              @default(5) @map("max_projects")
+  apiCallsPerMonthLimit Int              @default(100000) @map("api_calls_per_month_limit")
+  storageGbLimit        Int              @default(100) @map("storage_gb_limit")
+  apiOveragePolicy      ApiOveragePolicy @default(HARD_STOP) @map("api_overage_policy")
+  allowPublicProjects   Boolean          @default(true) @map("allow_public_projects")
+  notificationsEnabled  Boolean          @default(true) @map("notifications_enabled")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
 
   @@map("tenant_settings")
 }
@@ -381,18 +389,19 @@ model Tenant {
   name      String
   status    TenantStatus @default(ACTIVE)
   metadata  Json?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
 
-  users           User[]
-  calls           Call[]
-  stakeLedger     StakeLedger[]
-  claims          Claim[]
-  pools           Pool[]
-  plan            TenantPlan       @default(FREE)
-  settings        TenantSettings?
-  tenantAuditLogs TenantAuditLog[]
-  tenantMembers   TenantMember[]
+  settings      TenantSettings?
+  calls         Call[]
+  claims        Claim[]
+  pools         Pool[]
+  users         User[]
+  auditLogs     TenantAuditLog[]
+  tenantMembers TenantMember[]
+
+  stakeLedger StakeLedger[]
+  plan        TenantPlan    @default(FREE)
 
   @@index([status])
   @@map("tenants")

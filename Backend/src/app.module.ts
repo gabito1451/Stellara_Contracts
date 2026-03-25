@@ -1,22 +1,29 @@
-import { AuditModule } from './audit/audit.module';
-import { ScheduleModule } from '@nestjs/schedule';
+import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
-import { RedisModule } from './redis/redis.module';
-import { RateLimitModule } from './rate-limiting/rate-limit.module';
-import { SessionModule } from './sessions/session.module';
-import { LifecycleModule } from './lifecycle/lifecycle.module';
-import { IndexAnalysisModule } from './index-analysis/index-analysis.module';
 import { BackupModule } from './backup/backup.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database.module';
+import { DocsController } from './docs/docs.controller';
 import { ErrorHandlingModule } from './common/error-handling.module';
+import { IndexAnalysisModule } from './index-analysis/index-analysis.module';
+import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { LoggingModule } from './logging/logging.module';
 import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma.module';
+import { QuotaModule } from './quota/quota.module';
+import { RabbitmqModule } from './messaging/rabbitmq/rabbitmq.module';
+import { RateLimitModule } from './rate-limiting/rate-limit.module';
+import { RedisModule } from './redis/redis.module';
 import { ReputationModule } from './reputation/reputation.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SessionModule } from './sessions/session.module';
+import { TenantModule } from './tenant/tenant.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import { UserController } from './user.controller';
 import { WebsocketModule } from './websocket/websocket.module';
 import { validateEnv } from './config/env.validation';
 
@@ -54,6 +61,7 @@ import { validateEnv } from './config/env.validation';
     ReputationModule,
     RedisModule,
     DatabaseModule,
+    PrismaModule,
     LifecycleModule,
     RateLimitModule,
     SessionModule,
@@ -62,8 +70,12 @@ import { validateEnv } from './config/env.validation';
     WebsocketModule,
     // Backup and disaster recovery module
     BackupModule,
+    QuotaModule,
+    AdminModule,
+    TenantModule,
+    RabbitmqModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UserController, DocsController],
   providers: [AppService],
 })
 export class AppModule { }
