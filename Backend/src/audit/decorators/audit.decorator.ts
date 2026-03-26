@@ -34,40 +34,40 @@ export const SkipAudit = () => SetMetadata(SKIP_AUDIT_KEY, true);
  * Decorator for auditing entity creation.
  */
 export const AuditCreate = (entityType: string, options?: Partial<AuditMetadata>) =>
-    Audit({
-        entityType,
-        captureRequestBody: true,
-        captureResponseBody: true,
-        ...options,
-    });
+  Audit({
+    entityType,
+    captureRequestBody: true,
+    captureResponseBody: true,
+    ...options,
+  });
 
 /**
  * Decorator for auditing entity reads.
  */
 export const AuditRead = (entityType: string, options?: Partial<AuditMetadata>) =>
-    Audit({
-        entityType,
-        captureResponseBody: false,
-        ...options,
-    });
+  Audit({
+    entityType,
+    captureResponseBody: false,
+    ...options,
+  });
 
 /**
  * Decorator for auditing entity updates.
  */
 export const AuditUpdate = (entityType: string, options?: Partial<AuditMetadata>) =>
-    Audit({
-        entityType,
-        captureRequestBody: true,
-        captureResponseBody: true,
-        ...options,
-    });
+  Audit({
+    entityType,
+    captureRequestBody: true,
+    captureResponseBody: true,
+    ...options,
+  });
 
 /**
  * Decorator for auditing entity deletions.
  */
 export const AuditDelete = (entityType: string, options?: Partial<AuditMetadata>) =>
-    Audit({
-        entityType,
-        captureResponseBody: false,
-        ...options,
-    });
+  Audit({
+    entityType,
+    captureResponseBody: false,
+    ...options,
+  });

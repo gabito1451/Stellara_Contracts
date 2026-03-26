@@ -10,28 +10,16 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 @Global()
 @Module({
-    imports: [
-        DatabaseModule,
-        ScheduleModule.forRoot(), // Required for retention policy cron jobs
-    ],
-    controllers: [AuditController],
-    providers: [
-        AuditService,
-        AuditRetentionService,
-        AuditInterceptor,
-        AuditContextMiddleware,
-    ],
-    exports: [
-        AuditService,
-        AuditRetentionService,
-        AuditInterceptor,
-        AuditContextMiddleware,
-    ],
+  imports: [
+    DatabaseModule,
+    ScheduleModule.forRoot(), // Required for retention policy cron jobs
+  ],
+  controllers: [AuditController],
+  providers: [AuditService, AuditRetentionService, AuditInterceptor, AuditContextMiddleware],
+  exports: [AuditService, AuditRetentionService, AuditInterceptor, AuditContextMiddleware],
 })
 export class AuditModule {
-    configure (consumer: MiddlewareConsumer): void {
-        consumer
-            .apply(AuditContextMiddleware)
-            .forRoutes({ path: '*', method: RequestMethod.ALL });
-    }
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AuditContextMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
 }

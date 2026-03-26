@@ -3,19 +3,19 @@ import * as cookieParser from 'cookie-parser';
 import { ClsMiddleware, CorrelationIdMiddleware, StructuredLoggerService } from './logging';
 
 import { AppModule } from './app.module';
+import { ApplicationStateService } from './lifecycle/application-state.service';
 import { AuditInterceptor } from './audit';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import { UserThrottlerGuard } from './common/guards/user-throttler.guard';
+import { InflightRequestMiddleware } from './lifecycle/inflight-request.middleware';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { InflightRequestMiddleware } from './lifecycle/inflight-request.middleware';
-import { ApplicationStateService } from './lifecycle/application-state.service';
-import { inputSanitizationMiddleware } from './security/sanitization/input-sanitization.middleware';
+import { NestFactory } from '@nestjs/core';
 import { TenantQuotaMiddleware } from './quota/tenant-quota.middleware';
+import { UserThrottlerGuard } from './common/guards/user-throttler.guard';
+import { ValidationPipe } from '@nestjs/common';
+import { inputSanitizationMiddleware } from './security/sanitization/input-sanitization.middleware';
 
-async function bootstrap () {
+async function bootstrap() {
   // Create app with buffer logs to ensure we can use our custom logger
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
@@ -88,6 +88,10 @@ async function bootstrap () {
   logger.log(`Environment: ${configService.get<string>('NODE_ENV', 'development')}`, 'Bootstrap');
   logger.log(`Log level: ${configService.get<string>('LOG_LEVEL', 'info')}`, 'Bootstrap');
   logger.log(`Audit logging: enabled`, 'Bootstrap');
+  logger.log(
+    `Deployment slot: ${configService.get<string>('DEPLOYMENT_SLOT', 'standalone')} release=${configService.get<string>('RELEASE_VERSION', 'local')}`,
+    'Bootstrap',
+  );
 
   let shuttingDown = false;
   const shutdown = async (signal: string) => {

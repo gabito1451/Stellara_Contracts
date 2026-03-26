@@ -17,9 +17,7 @@ describe('NotificationController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationController],
-      providers: [
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [{ provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     controller = module.get<NotificationController>(NotificationController);

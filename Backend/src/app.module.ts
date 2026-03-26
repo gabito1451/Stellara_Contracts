@@ -1,3 +1,4 @@
+import { AbiRegistryModule } from './abi-registry/abi-registry.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -24,6 +25,7 @@ import { TenantModule } from './tenant/tenant.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { UserController } from './user.controller';
+import { WebhooksModule } from './webhooks/webhooks.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { validateEnv } from './config/env.validation';
 
@@ -73,9 +75,11 @@ import { validateEnv } from './config/env.validation';
     QuotaModule,
     AdminModule,
     TenantModule,
+    WebhooksModule,
     RabbitmqModule,
+    AbiRegistryModule,
   ],
   controllers: [AppController, UserController, DocsController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

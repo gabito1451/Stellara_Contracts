@@ -42,13 +42,13 @@ const DEFAULT_SANITIZATION_OPTIONS: Required<SanitizationOptions> = {
 // Conservative SQLi heuristics; avoids blocking benign text like "hello world".
 const SQLI_KEYWORD_REGEX = new RegExp(
   String.raw`\b(select|insert|update|delete|drop|truncate|union|alter|create|grant|revoke|sleep|benchmark)\b`,
-  'i'
+  'i',
 );
 const SQLI_COMMENT_REGEX = /(--|\#|\/\*.*?\*\/)/i;
 const SQLI_BOOLEAN_BYPASS_REGEX = /\b(or|and)\b\s+1\s*=\s*1\b/i;
 const SQLI_STATEMENT_SEPARATOR_REGEX = /;/;
 
-function normalizeUnicode (value: string): string {
+function normalizeUnicode(value: string): string {
   try {
     return value.normalize('NFKC');
   } catch {
@@ -56,7 +56,7 @@ function normalizeUnicode (value: string): string {
   }
 }
 
-export function containsSqlInjection (value: string): boolean {
+export function containsSqlInjection(value: string): boolean {
   const v = normalizeUnicode(value);
   return (
     SQLI_KEYWORD_REGEX.test(v) ||
@@ -68,11 +68,11 @@ export function containsSqlInjection (value: string): boolean {
 
 const XSS_SCRIPT_REGEX = /<\s*script\b/i;
 
-export function containsXss (value: string): boolean {
+export function containsXss(value: string): boolean {
   return XSS_SCRIPT_REGEX.test(value);
 }
 
-function sanitizeHtmlString (value: string, options: SanitizationOptions): string {
+function sanitizeHtmlString(value: string, options: SanitizationOptions): string {
   const normalized = normalizeUnicode(value);
   const { allowedTags } = { ...DEFAULT_SANITIZATION_OPTIONS, ...options };
 
@@ -84,7 +84,7 @@ function sanitizeHtmlString (value: string, options: SanitizationOptions): strin
   });
 }
 
-function isPlainObject (value: unknown): value is Record<string, unknown> {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== 'object' || value === null) return false;
   if (Array.isArray(value)) return false;
   // Robust "plain object" check for request payloads, including objects with
@@ -92,13 +92,9 @@ function isPlainObject (value: unknown): value is Record<string, unknown> {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
 
-const DANGEROUS_KEYS = new Set([
-  '__proto__',
-  'prototype',
-  'constructor',
-]);
+const DANGEROUS_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 
-function stripNoSqlOperators (obj: Record<string, unknown>): Record<string, unknown> {
+function stripNoSqlOperators(obj: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
@@ -108,13 +104,17 @@ function stripNoSqlOperators (obj: Record<string, unknown>): Record<string, unkn
   return result;
 }
 
-export function sanitizeDeep<T> (input: T, options: SanitizationOptions = {} as SanitizationOptions): T {
+export function sanitizeDeep<T>(
+  input: T,
+  options: SanitizationOptions = {} as SanitizationOptions,
+): T {
   // Primitive passthrough
   if (input === null || input === undefined) return input;
 
   if (typeof input === 'string') {
     const normalized = normalizeUnicode(input);
-    const detectSqlInjection = options.detectSqlInjection ?? DEFAULT_SANITIZATION_OPTIONS.detectSqlInjection;
+    const detectSqlInjection =
+      options.detectSqlInjection ?? DEFAULT_SANITIZATION_OPTIONS.detectSqlInjection;
     if (detectSqlInjection && containsSqlInjection(normalized)) {
       throw new SqlInjectionDetectedError();
     }
@@ -138,7 +138,7 @@ export function sanitizeDeep<T> (input: T, options: SanitizationOptions = {} as 
   return input;
 }
 
-export function containsNoSqlOperators (value: unknown): boolean {
+export function containsNoSqlOperators(value: unknown): boolean {
   if (value === null || value === undefined) return false;
   if (Array.isArray(value)) return value.some(containsNoSqlOperators);
   if (!isPlainObject(value)) return false;
@@ -150,4 +150,3 @@ export function containsNoSqlOperators (value: unknown): boolean {
   }
   return false;
 }
-

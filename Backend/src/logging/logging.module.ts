@@ -11,7 +11,7 @@ import { StructuredLoggerService } from './services/structured-logger.service';
 @Global()
 @Module({})
 export class LoggingModule {
-  static forRoot (options: LoggingModuleOptions = {}): DynamicModule {
+  static forRoot(options: LoggingModuleOptions = {}): DynamicModule {
     const providers: Provider[] = [
       AsyncContextService,
       ClsMiddleware,
@@ -50,7 +50,7 @@ export class LoggingModule {
     };
   }
 
-  static forRootAsync (options: {
+  static forRootAsync(options: {
     useFactory: (...args: any[]) => Promise<LoggingModuleOptions> | LoggingModuleOptions;
     inject?: any[];
   }): DynamicModule {
