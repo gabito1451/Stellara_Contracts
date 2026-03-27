@@ -39,8 +39,13 @@ import { validateEnv } from './config/env.validation';
 import { SupportModule } from './support/support.module';
 import { MultisigModule } from './multisig/multisig.module';
 import { VestingModule } from './vesting/vesting.module';
+import { LiquidityMiningModule } from './liquidity-mining/liquidity-mining.module';
 import { MonitoringModule } from './monitoring/monitoring.module';
 import { GraphqlModule } from './graphql/graphql.module';
+import { ObjectStorageModule } from './object-storage/object-storage.module';
+import { FailoverModule } from './failover/failover.module';
+import { CostMonitoringModule } from './cost-monitoring/cost-monitoring.module';
+import { DataResidencyModule } from './data-residency/data-residency.module';
 
 @Module({
   imports: [
@@ -100,8 +105,13 @@ import { GraphqlModule } from './graphql/graphql.module';
     CollateralModule,
     GeolocationModule,
     VestingModule,
+    LiquidityMiningModule,
     MonitoringModule,
     GraphqlModule,
+    ObjectStorageModule,
+    FailoverModule,
+    CostMonitoringModule,
+    DataResidencyModule,
   ],
   controllers: [AppController, UserController, DocsController],
   providers: [AppService],
